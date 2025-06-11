@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Projeto de Vendas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+        
+        .glow {
+            box-shadow: 0 4px 6px -1px rgba(0, 179, 124, 0.1), 0 2px 4px -1px rgba(0, 179, 124, 0.06);
+        }
+        
+        .negative {
+            color: #ef4444;
+        }
+        
+        .positive {
+            color: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-primary-700 to-primary-900 text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="flex flex-col sm:flex-row justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold">SuplementoMineral</h1>
+                        <p class="mt-1 text-primary-200">Dashboard projeção de revenda de SuplementoMineral</p>
+                    </div>
+                    <a href="https://wa.me/5588981126816" target="_blank" style="
+                    display: inline-block;
+                    background-color: #25D366;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-weight: bold;
+                    font-family: sans-serif;
+                  ">
+                    Contratar
+                  </a>
+                   </div>
+            </div>
+        </header>
+        
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Seção de Inputs -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2">
+                    <div class="card bg-white rounded-xl p-6 shadow-md">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Parâmetros do Projeto</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Quantidade de Produtos -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Quantidade de Produtos</label>
+                                <input type="number" id="quantidade_produtos" placeholder="Ex: 100" value="200" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            
+                            <!-- Valor Unitário de Venda -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Valor Unitário de Venda (R$)</label>
+                                <input type="number" step="0.01" id="valor_unitario_venda" value="700" placeholder="Ex: 700.00" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            
+                            <!-- Percentual de Comissão -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Percentual de Comissão (%)</label>
+                                <input type="number" step="0.01" id="percentual_comissao" value="20" placeholder="Ex: 20" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            
+                            <!-- Percentual de Despesas -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Percentual de Despesas (%)</label>
+                                <input type="number" step="0.01" id="percentual_despesas" value="15" placeholder="Ex: 15" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            
+                            <!-- Dias de Viagem -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Dias de Viagem e Venda</label>
+                                <input type="number" id="dias_viagem_venda" placeholder="Ex: 60" value="60" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            
+                            <!-- Percentual de Recebimento -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Percentual de Recebimento (%)</label>
+                                <input type="number" step="0.01" id="percentual_recebimento" placeholder="Ex: 90" value="80 " class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 flex flex-wrap gap-4">
+                            <button onclick="calcular()" class="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition duration-300">
+                                <i class="fas fa-calculator mr-2"></i>Calcular Projeto
+                            </button>
+                            <button onclick="limparCampos()" class="px-6 py-3 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition duration-300">
+                                <i class="fas fa-trash mr-2"></i>Limpar Campos
+                            </button>
+                            <button onclick="salvarDados()" class="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition duration-300">
+                                <i class="fas fa-save mr-2"></i>Salvar Projeto
+                            </button>
+                            <button onclick="carregarDados()" class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300">
+                                <i class="fas fa-folder-open mr-2"></i>Carregar Projeto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Destaques de Resultados -->
+                <div>
+                    <div class="card bg-white rounded-xl p-6 shadow-md">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Resumo do Projeto</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-primary-50 to-white rounded-lg">
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600">Total Venda</h3>
+                                    <p id="total_venda" class="text-2xl font-bold text-gray-800">R$ 0.00</p>
+                                </div>
+                                <div class="bg-primary-100 p-3 rounded-full">
+                                    <i class="fas fa-money-bill-wave text-primary-600 text-2xl"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-indigo-50 to-white rounded-lg">
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600">Custo Mercadoria</h3>
+                                    <p id="custo_mercadoria" class="text-2xl font-bold text-indigo-800">R$ 0.00</p>
+                                </div>
+                                <div class="bg-indigo-100 p-3 rounded-full">
+                                    <i class="fas fa-shopping-cart text-indigo-600 text-2xl"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-white rounded-lg">
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600">Valor Recebido</h3>
+                                    <p id="valor_recebido" class="text-2xl font-bold text-green-800">R$ 0.00</p>
+                                </div>
+                                <div class="bg-green-100 p-3 rounded-full">
+                                    <i class="fas fa-hand-holding-usd text-green-600 text-2xl"></i>
+                                </div>
+                            </div>
+                            
+                            <div id="lucro_card" class="flex justify-between items-center p-4 bg-gradient-to-r from-amber-50 to-white rounded-lg glow">
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600">Lucro Estimado</h3>
+                                    <p id="lucro_estimado" class="text-2xl font-bold text-amber-700">R$ 0.00</p>
+                                </div>
+                                <div class="bg-amber-100 p-3 rounded-full">
+                                    <i class="fas fa-chart-line text-amber-600 text-2xl"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 bg-gray-100 rounded-lg p-4">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm font-medium text-gray-600">Margem de Lucro</span>
+                                    <span id="margem_lucro" class="text-sm font-bold text-gray-800">0.00%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div id="progress_margem" class="h-2.5 rounded-full bg-green-600" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabela de Resultados Detalhados -->
+            <div class="card bg-white rounded-xl p-6 shadow-md mt-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Detalhamento do Projeto</h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-gray-700">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-3 font-medium">Indicador</th>
+                                <th class="px-4 py-3 font-medium">Valor</th>
+                                <th class="px-4 py-3 font-medium">Detalhe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="px-4 py-3 font-medium">Custo Total da Mercadoria</td>
+                                <td id="detalhe_custo_mercadoria" class="px-4 py-3">R$ 0.00</td>
+                                <td class="px-4 py-3">50% - Comissão - Despesas</td>
+                            </tr>
+                            <tr class="border-b bg-gray-50">
+                                <td class="px-4 py-3 font-medium">Comissão Total</td>
+                                <td id="detalhe_comissao_total" class="px-4 py-3">R$ 0.00</td>
+                                <td class="px-4 py-3"><span id="detalhe_perc_comissao">0</span>% sobre o total da venda</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="px-4 py-3 font-medium">Despesas Totais</td>
+                                <td id="detalhe_despesas_totais" class="px-4 py-3">R$ 0.00</td>
+                                <td class="px-4 py-3"><span id="detalhe_perc_despesas">0</span>% sobre o total da venda</td>
+                            </tr>
+                            <tr class="border-b bg-gray-50">
+                                <td class="px-4 py-3 font-medium">Custo Total do Projeto</td>
+                                <td id="detalhe_custo_projeto" class="px-4 py-3">R$ 0.00</td>
+                                <td class="px-4 py-3">Mercadoria + Comissão + Despesas</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="px-4 py-3 font-medium">Despesa Diária</td>
+                                <td id="detalhe_despesa_diaria" class="px-4 py-3">R$ 0.00</td>
+                                <td class="px-4 py-3">Despesas totais / Dias de viagem</td>
+                            </tr>
+                            <tr class="border-b bg-gray-50">
+                                <td class="px-4 py-3 font-medium">Valor Unitário de Compra</td>
+                                <td id="detalhe_unitario_compra" class="px-4 py-3">R$ 0.00</td>
+                                <td class="px-4 py-3">Custo da mercadoria ajustado / Quantidade</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Seção de Gráficos -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <!-- Gráfico de Composição de Custos -->
+                <div class="card bg-white rounded-xl p-6 shadow-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Composição de Custos</h2>
+                        <div class="flex space-x-2">
+                            <button onclick="toggleChartType('costChart', 'pie')" class="p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-chart-pie"></i>
+                            </button>
+                            <button onclick="toggleChartType('costChart', 'doughnut')" class="p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-chart-pie"></i>
+                            </button>
+                            <button onclick="toggleChartType('costChart', 'bar')" class="p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-chart-bar"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="h-80">
+                        <canvas id="costChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Gráfico de Resumo Financeiro -->
+                <div class="card bg-white rounded-xl p-6 shadow-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Resumo Financeiro</h2>
+                        <div class="flex space-x-2">
+                            <button onclick="toggleChartType('financeChart', 'bar')" class="p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-chart-bar"></i>
+                            </button>
+                            <button onclick="toggleChartType('financeChart', 'line')" class="p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="h-80">
+                        <canvas id="financeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white mt-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              <div class="flex flex-col md:flex-row justify-between items-center md:items-start">
+                
+                <!-- Lado esquerdo -->
+                <div class="text-center md:text-left">
+                  <p>Dashboard de Análise de Projetos de Vendas &copy; <span id="current-year"></span></p>
+                  <p class="text-gray-400 text-sm mt-2">Suas informações são salvas no seu aparelho</p>
+                </div>
+                
+                <!-- Lado direito -->
+                <div class="mt-4 md:mt-0 text-center md:text-right">
+                  <p>Betinho Ribeiro</p>
+                  <a href="https://www.arsenalsystembr.com.br" class="color: bg-green-100;" target="_blank">ArsenalSystem</a>
+                </div>
+                
+              </div>
+            </div>
+          </footer>
+          
+    </div>
+    
+    <script>
+        // Configuração inicial
+        let costChart, financeChart;
+        
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // Carregar dados salvos ao iniciar
+        window.addEventListener('DOMContentLoaded', function() {
+            carregarDados();
+        });
+        
+        // Função principal de cálculo
+        function calcular() {
+            // Obter valores dos inputs
+            const quantidade_produtos = parseFloat(document.getElementById('quantidade_produtos').value) || 0;
+            const valor_unitario_venda = parseFloat(document.getElementById('valor_unitario_venda').value) || 0;
+            const percentual_comissao = parseFloat(document.getElementById('percentual_comissao').value) || 0;
+            const percentual_despesas = parseFloat(document.getElementById('percentual_despesas').value) || 0;
+            const dias_viagem_venda = parseFloat(document.getElementById('dias_viagem_venda').value) || 1; // Evita divisão por zero
+            const percentual_recebimento = parseFloat(document.getElementById('percentual_recebimento').value) || 100;
+            
+            // Realizar cálculos
+            const valor_total_venda = quantidade_produtos * valor_unitario_venda;
+            const percentual_custo_mercadoria = 50 - percentual_comissao - percentual_despesas;
+            const custo_mercadoria_total = valor_total_venda * (percentual_custo_mercadoria / 100);
+            const custo_mercadoria_prazo = custo_mercadoria_total * 0.9;
+            const valor_unitario_compra = custo_mercadoria_prazo / quantidade_produtos;
+            const valor_total_comissao = valor_total_venda * (percentual_comissao / 100);
+            const valor_total_despesas = valor_total_venda * (percentual_despesas / 100);
+            const despesa_diaria = valor_total_despesas / dias_viagem_venda;
+            const custo_total_projeto = custo_mercadoria_total + valor_total_comissao + valor_total_despesas;
+            const valor_total_recebido = valor_total_venda * (percentual_recebimento / 100);
+            const lucro_estimado = valor_total_recebido - custo_total_projeto;
+            const margem_lucro = (lucro_estimado / valor_total_venda) * 100;
+            
+            // Atualizar resumo de resultados
+            document.getElementById('total_venda').textContent = formatarMoeda(valor_total_venda);
+            document.getElementById('custo_mercadoria').textContent = formatarMoeda(custo_mercadoria_total);
+            document.getElementById('valor_recebido').textContent = formatarMoeda(valor_total_recebido);
+            document.getElementById('lucro_estimado').textContent = formatarMoeda(lucro_estimado);
+            document.getElementById('margem_lucro').textContent = margem_lucro.toFixed(2) + '%';
+            
+            // Atualizar classe para lucro positivo/negativo
+            const lucroCard = document.getElementById('lucro_card');
+            const lucroElement = document.getElementById('lucro_estimado');
+            
+            if (lucro_estimado >= 0) {
+                lucroCard.classList.remove('bg-gradient-to-r', 'from-red-50', 'to-white');
+                lucroCard.classList.add('glow', 'bg-gradient-to-r', 'from-amber-50', 'to-white');
+                lucroElement.classList.remove('negative');
+                lucroElement.classList.add('positive');
+            } else {
+                lucroCard.classList.remove('glow', 'bg-gradient-to-r', 'from-amber-50', 'to-white');
+                lucroCard.classList.add('bg-gradient-to-r', 'from-red-50', 'to-white');
+                lucroElement.classList.remove('positive');
+                lucroElement.classList.add('negative');
+            }
+            
+            // Atualizar barra de progresso
+            document.getElementById('progress_margem').style.width = `${Math.min(100, Math.max(0, margem_lucro))}%`;
+            
+            // Atualizar resultados detalhados
+            document.getElementById('detalhe_custo_mercadoria').textContent = formatarMoeda(custo_mercadoria_total);
+            document.getElementById('detalhe_comissao_total').textContent = formatarMoeda(valor_total_comissao);
+            document.getElementById('detalhe_despesas_totais').textContent = formatarMoeda(valor_total_despesas);
+            document.getElementById('detalhe_custo_projeto').textContent = formatarMoeda(custo_total_projeto);
+            document.getElementById('detalhe_despesa_diaria').textContent = formatarMoeda(despesa_diaria);
+            document.getElementById('detalhe_unitario_compra').textContent = formatarMoeda(valor_unitario_compra);
+            document.getElementById('detalhe_perc_comissao').textContent = percentual_comissao;
+            document.getElementById('detalhe_perc_despesas').textContent = percentual_despesas;
+            
+            // Atualizar gráficos
+            atualizarGraficos(
+                valor_total_venda,
+                custo_mercadoria_total,
+                valor_total_comissao,
+                valor_total_despesas,
+                valor_total_recebido,
+                custo_total_projeto,
+                lucro_estimado
+            );
+            
+            // Salvar dados automaticamente após cálculo
+            salvarDados();
+        }
+        
+        // Função para formatar valores monetários
+        function formatarMoeda(valor) {
+            return 'R$ ' + valor.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        
+        // Funções para manipulação de dados
+        function salvarDados() {
+            const dados = {
+                quantidade_produtos: document.getElementById('quantidade_produtos').value,
+                valor_unitario_venda: document.getElementById('valor_unitario_venda').value,
+                percentual_comissao: document.getElementById('percentual_comissao').value,
+                percentual_despesas: document.getElementById('percentual_despesas').value,
+                dias_viagem_venda: document.getElementById('dias_viagem_venda').value,
+                percentual_recebimento: document.getElementById('percentual_recebimento').value
+            };
+            
+            localStorage.setItem('projetoVendas', JSON.stringify(dados));
+            
+            // Feedback visual de salvamento
+            const saveBtn = document.querySelector('button:has(.fa-save)');
+            const originalText = saveBtn.innerHTML;
+            
+            saveBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Salvo com sucesso!';
+            saveBtn.classList.add('bg-green-700');
+            saveBtn.classList.remove('bg-green-600');
+            
+            setTimeout(() => {
+                saveBtn.innerHTML = originalText;
+                saveBtn.classList.remove('bg-green-700');
+                saveBtn.classList.add('bg-green-600');
+            }, 2000);
+        }
+        
+        function carregarDados() {
+            const dadosSalvos = localStorage.getItem('projetoVendas');
+            
+            if (dadosSalvos) {
+                const dados = JSON.parse(dadosSalvos);
+                
+                document.getElementById('quantidade_produtos').value = dados.quantidade_produtos;
+                document.getElementById('valor_unitario_venda').value = dados.valor_unitario_venda;
+                document.getElementById('percentual_comissao').value = dados.percentual_comissao;
+                document.getElementById('percentual_despesas').value = dados.percentual_despesas;
+                document.getElementById('dias_viagem_venda').value = dados.dias_viagem_venda;
+                document.getElementById('percentual_recebimento').value = dados.percentual_recebimento;
+                
+                // Feedback visual de carregamento
+                const loadBtn = document.querySelector('button:has(.fa-folder-open)');
+                const originalText = loadBtn.innerHTML;
+                
+                loadBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Carregado!';
+                loadBtn.classList.add('bg-blue-700');
+                loadBtn.classList.remove('bg-blue-600');
+                
+                setTimeout(() => {
+                    loadBtn.innerHTML = originalText;
+                    loadBtn.classList.remove('bg-blue-700');
+                    loadBtn.classList.add('bg-blue-600');
+                    
+                    // Calcular imediatamente após carregar
+                    calcular();
+                }, 1000);
+            } else {
+                alert('Não há dados salvos para carregar.');
+            }
+        }
+        
+        function limparCampos() {
+            document.getElementById('quantidade_produtos').value = '';
+            document.getElementById('valor_unitario_venda').value = '';
+            document.getElementById('percentual_comissao').value = '';
+            document.getElementById('percentual_despesas').value = '';
+            document.getElementById('dias_viagem_venda').value = '';
+            document.getElementById('percentual_recebimento').value = '';
+            
+            document.querySelectorAll('[id^="detalhe_"]').forEach(el => {
+                if (el.tagName === 'TD') {
+                    el.textContent = 'R$ 0.00';
+                }
+            });
+            
+            document.getElementById('total_venda').textContent = 'R$ 0.00';
+            document.getElementById('custo_mercadoria').textContent = 'R$ 0.00';
+            document.getElementById('valor_recebido').textContent = 'R$ 0.00';
+            document.getElementById('lucro_estimado').textContent = 'R$ 0.00';
+            document.getElementById('margem_lucro').textContent = '0.00%';
+            document.getElementById('progress_margem').style.width = '0%';
+            
+            // Resetar gráficos
+            if (costChart) costChart.destroy();
+            if (financeChart) financeChart.destroy();
+            
+            // Feedback visual
+            alert('Campos limpos com sucesso!');
+        }
+        
+        // Funções para gráficos
+        function atualizarGraficos(valor_total_venda, custo_mercadoria, comissao, despesas, recebido, custo_total, lucro) {
+            // Destruir gráficos anteriores se existirem
+            if (costChart) costChart.destroy();
+            if (financeChart) financeChart.destroy();
+            
+            // Gráfico de composição de custos
+            const costCtx = document.getElementById('costChart').getContext('2d');
+            costChart = new Chart(costCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Custo Mercadoria', 'Comissão', 'Despesas'],
+                    datasets: [{
+                        data: [custo_mercadoria, comissao, despesas],
+                        backgroundColor: [
+                            'rgba(79, 70, 229, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(192, 132, 252, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(79, 70, 229)',
+                            'rgb(139, 92, 246)',
+                            'rgb(192, 132, 252)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    size: 12
+                                },
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + formatarMoeda(context.parsed);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de resumo financeiro
+            const financeCtx = document.getElementById('financeChart').getContext('2d');
+            financeChart = new Chart(financeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Recebido', 'Custos', 'Lucro'],
+                    datasets: [{
+                        label: 'Valores em R$',
+                        data: [recebido, custo_total, lucro],
+                        backgroundColor: [
+                            'rgba(20, 184, 166, 0.7)',
+                            'rgba(239, 68, 68, 0.7)',
+                            lucro >= 0 ? 'rgba(234, 179, 8, 0.7)' : 'rgba(239, 68, 68, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(13, 148, 136)',
+                            'rgb(220, 38, 38)',
+                            lucro >= 0 ? 'rgb(202, 138, 4)' : 'rgb(220, 38, 38)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toLocaleString('pt-BR');
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatarMoeda(context.parsed.y);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Alternar tipos de gráficos
+        function toggleChartType(chartId, chartType) {
+            if (chartId === 'costChart' && costChart) {
+                costChart.destroy();
+                const costCtx = document.getElementById('costChart').getContext('2d');
+                costChart = new Chart(costCtx, {
+                    type: chartType,
+                    data: costChart.data,
+                    options: costChart.options
+                });
+            } else if (chartId === 'financeChart' && financeChart) {
+                financeChart.destroy();
+                const financeCtx = document.getElementById('financeChart').getContext('2d');
+                financeChart = new Chart(financeCtx, {
+                    type: chartType,
+                    data: financeChart.data,
+                    options: financeChart.options
+                });
+            }
+        }
+    </script>
+    <script>
+        // Verifica se a senha existe e é igual a "11062025"
+        const senhaCorreta = "11062025";
+        const senhaArmazenada = localStorage.getItem("senha");
+      
+        if (senhaArmazenada !== senhaCorreta) {
+          // Redireciona se a senha não estiver correta
+          window.location.href = "login.html";
+        }
+      </script>
+      
+</body>
+</html>
