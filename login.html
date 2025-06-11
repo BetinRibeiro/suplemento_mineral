@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso Protegido</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b82f6',
+            secondary: '#1e293b',
+            accent: '#8b5cf6',
+            dark: '#0f172a',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    
+    .input-group {
+      transition: all 0.3s ease;
+    }
+    
+    .input-group:focus-within {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Logo/Cabeçalho -->
+    <div class="text-center mb-8 pulse">
+      <div class="mx-auto w-20 h-20 bg-gradient-to-tr from-primary to-accent rounded-xl flex items-center justify-center">
+        <i class="fas fa-lock text-white text-3xl"></i>
+      </div>
+      <h1 class="text-3xl font-bold text-white mt-4">Área Restrita</h1>
+      <p class="text-gray-300 mt-2">Acesso exclusivo com senha</p>
+    </div>
+    
+    <!-- Card de Login -->
+    <div class="glass-card p-8 rounded-xl">
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Senha de Acesso</label>
+          <div class="input-group relative flex items-center bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="••••••••" 
+              class="w-full bg-transparent py-4 px-4 text-white placeholder-gray-500 outline-none"
+            >
+            <button 
+              type="button" 
+              id="togglePassword" 
+              class="px-4 text-gray-400 hover:text-white focus:outline-none"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <button 
+          type="submit" 
+          class="btn-primary w-full py-4 rounded-lg text-white font-semibold"
+        >
+          <i class="fas fa-key mr-2"></i>Acessar Área Restrita
+        </button>
+      </form>
+      
+      <!-- Mensagem de erro -->
+      <div id="errorMessage" class="mt-6 bg-red-900/40 border border-red-700 rounded-lg p-4 hidden">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <i class="fas fa-exclamation-circle text-red-400 text-xl"></i>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-200">Senha Incorreta</h3>
+            <div class="mt-2 text-sm text-red-300">
+              <p>Você inseriu uma senha incorreta. Por favor, verifique e tente novamente.</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <p class="text-sm text-gray-300">Problemas para acessar?</p>
+          <a 
+            href="https://wa.me/5588981126816" 
+            target="_blank"
+            class="mt-2 inline-flex items-center text-green-400 hover:text-green-300 text-sm font-medium"
+          >
+            <i class="fab fa-whatsapp mr-2 text-lg"></i>
+            Contate-nos pelo WhatsApp
+          </a>
+        </div>
+      </div>
+      
+      <!-- Rodapé -->
+      <div class="mt-8 text-center text-xs text-gray-500">
+        <p>O acesso não autorizado é estritamente proibido</p>
+        <p class="mt-1">© 2023 Área Protegida. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginForm = document.getElementById('loginForm');
+      const passwordInput = document.getElementById('password');
+      const togglePassword = document.getElementById('togglePassword');
+      const errorMessage = document.getElementById('errorMessage');
+      
+      // Verificar se já está logado
+      const correctPassword = "11062025";
+      const storedPassword = localStorage.getItem("senha");
+      
+      if(storedPassword === correctPassword) {
+        // Redirecionar para página protegida
+        window.location.href = "index.html";
+      }
+      
+      // Alternar visibilidade da senha
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePassword.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+      });
+      
+      // Processar login
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const enteredPassword = passwordInput.value;
+        
+        if(enteredPassword === correctPassword) {
+          // Salvar senha no localStorage
+          localStorage.setItem("senha", enteredPassword);
+          // Redirecionar para página protegida
+          window.location.href = "index.html";
+        } else {
+          // Mostrar mensagem de erro
+          errorMessage.classList.remove('hidden');
+          // Adicionar animação de erro
+          passwordInput.parentElement.classList.add('border-red-500');
+          setTimeout(() => {
+            passwordInput.parentElement.classList.remove('border-red-500');
+          }, 1000);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
